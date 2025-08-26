@@ -1,0 +1,274 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Línea del Tiempo — Sistemas Numéricos</title>
+  <style>
+    :root{--bg:#0f172a;--card:#0b1220;--accent:#6ee7b7;--muted:#94a3b8;--glass:rgba(255,255,255,0.04)}
+    html,body{height:100%;margin:0;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,"Helvetica Neue",Arial; background:linear-gradient(180deg,#071029 0%, #07182b 60%);color:#e6eef8}
+    .wrap{max-width:1100px;margin:32px auto;padding:24px}
+    header{display:flex;align-items:center;gap:16px}
+    h1{margin:0;font-size:1.6rem}
+    p.lead{margin:8px 0 18px;color:var(--muted)}
+
+    /* timeline layout */
+    .timeline{position:relative;margin:32px 0;padding-left:20px}
+    .line{position:absolute;left:40px;top:0;bottom:0;width:4px;background:linear-gradient(#1e293b,#0f172a);border-radius:4px}
+    .event{position:relative;padding:18px 22px 18px 80px;margin:18px 0;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);border-radius:12px;box-shadow:0 6px 18px rgba(2,6,23,0.7);backdrop-filter:blur(6px);}
+    .dot{position:absolute;left:28px;top:22px;width:24px;height:24px;border-radius:50%;display:grid;place-items:center;background:var(--glass);border:2px solid rgba(255,255,255,0.06)}
+    .dot span{width:14px;height:14px;border-radius:50%;background:linear-gradient(180deg,var(--accent),#34d399);box-shadow:0 2px 8px rgba(0,0,0,0.5)}
+    .event h3{margin:0 0 6px;font-size:1.05rem}
+    .meta{font-size:0.86rem;color:var(--muted)}
+    .desc{margin-top:8px;line-height:1.5;color:#d9e7ff}
+
+    /* details panel */
+    .details{margin-top:28px;padding:18px;border-radius:12px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:20px}
+    .card{padding:14px;border-radius:10px;background:rgba(255,255,255,0.02)}
+
+    .legend{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .legend div{display:flex;gap:8px;align-items:center;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01)}
+
+    .controls{display:flex;gap:8px;flex-wrap:wrap}
+    button{background:transparent;border:1px solid rgba(255,255,255,0.06);padding:8px 12px;border-radius:8px;color:var(--muted);cursor:pointer}
+    button.primary{border-color:var(--accent);color:var(--accent)}
+
+    footer{margin-top:22px;color:var(--muted);font-size:0.9rem}
+
+    @media (max-width:880px){.grid{grid-template-columns:1fr}.event{padding-left:70px}.line{left:30px}.dot{left:18px}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" aria-hidden>
+        <rect x="2" y="2" width="20" height="20" rx="4" fill="#083344" />
+        <path d="M7 13h10M7 9h10M7 17h6" stroke="#6ee7b7" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+      <div>
+        <h1>Línea del tiempo: evolución de los sistemas numéricos</h1>
+        <p class="lead">Interactividad: haz clic en cualquier evento para ver la explicación. Incluye la historia desde marcas primitivas hasta el uso actual en informática (2025).</p>
+      </div>
+    </header>
+
+    <div class="grid">
+      <main>
+        <div class="timeline" id="timeline">
+          <div class="line"></div>
+
+          <!-- Events inserted by JS -->
+
+        </div>
+
+        <div class="details card" id="detailPane">
+          <h3>Selecciona un evento</h3>
+          <p class="meta">Aquí verás la explicación ampliada: contexto histórico, contribuciones y aplicaciones.</p>
+          <div id="detailContent" style="margin-top:12px;color:#d9e7ff">Haz clic en cualquier punto de la línea del tiempo para ver los detalles.</div>
+        </div>
+      </main>
+
+      <aside>
+        <div class="card">
+          <h3>Filtros y ayuda</h3>
+          <div class="controls" style="margin-top:8px">
+            <button class="primary" data-filter="all">Mostrar todo</button>
+            <button data-filter="ancient">Antiguo</button>
+            <button data-filter="medieval">Medieval</button>
+            <button data-filter="moderno">Moderno</button>
+            <button data-filter="computo">Informática</button>
+          </div>
+
+          <div style="margin-top:12px">
+            <h4>Leyenda</h4>
+            <div class="legend">
+              <div><div style="width:12px;height:12px;border-radius:3px;background:#6ee7b7"></div><small>Evento clave</small></div>
+              <div><div style="width:12px;height:12px;border-radius:3px;background:#94a3b8"></div><small>Transición/uso</small></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3>Resumen rápido</h3>
+          <p class="meta">Por qué surgen: para contar, medir y registrar; evolución: de marcas y sistemas no-posicionales a sistemas posicionales (decimal, binario, etc.); aplicaciones actuales: decimal (vida diaria), binario/hex/oct (informática y electrónica).</p>
+        </div>
+
+        <div class="card" style="margin-top:14px">
+          <h3>Referencias (APA 7ª)</h3>
+          <p class="meta" style="line-height:1.45">Johnsonbaugh, R. (2005). <i>Matemáticas discretas</i> (6.ª ed.). Pearson Educación.<br>
+          Rosen, K. H. (2004). <i>Matemática discreta y sus aplicaciones</i> (5.ª ed.). McGraw-Hill Interamericana.<br>
+          Hortala González, M. T. (2008). <i>Matemática discreta y lógica matemática</i>. Complutense.<br>
+          Matoušek, J., & Nešetřil, J. (2008). <i>Invitación a la matemática discreta</i>. Reverté.</p>
+        </div>
+      </aside>
+    </div>
+
+    <footer>
+        <p>Página creada para presentar la evolución de los sistemas numéricos</p>
+        <p>© 2023 - José Ricardo Sánchez Aguas (UNADM)</p>
+    </footer>
+  </div>
+
+  <script>
+    const events = [
+      {
+        id: 'ishango', era: 'prehistoric', title: 'Hueso de Ishango (marcas de conteo)', date: 'c. 20,000–18,000 a.C.',
+        summary: 'Uno de los primeros objetos con marcas que podrían indicar conteos y patrones numéricos; evidencia de razonamiento numérico en el Paleolítico.',
+        details: '<p>El hueso de Ishango, hallado en la cuenca del Congo, muestra series de marcas agrupadas que varios investigadores interpretan como registros de conteo o incluso patrones aritméticos sencillos. Refleja la existencia de técnicas de contabilización mucho antes de la aparición de sistemas escritos.</p>'
+      },
+      {
+        id: 'tokens', era: 'ancient', title: 'Fichas y contabilidad mesopotámica', date: 'c. 8000–3500 a.C.',
+        summary: 'Uso de fichas de arcilla para llevar cuentas; precursor de la escritura y sistemas numéricos escritos.',
+        details: '<p>En el Creciente Fértil se usaron pequeñas fichas de arcilla para registrar cantidades de bienes (ganado, grano). Más tarde estas fichas evolucionaron hacia las primeras inscripciones cuneiformes que permitieron anotar números y transacciones comerciales.</p>'
+      },
+      {
+        id: 'egypt', era: 'ancient', title: 'Sistema numérico egipcio (no posicional)', date: 'c. 3000–2000 a.C.',
+        summary: 'Símbolos separados para potencias (1, 10, 100, 1,000...), sin valor posicional.',
+        details: '<p>Los egipcios emplearon jeroglíficos numéricos para diferentes órdenes de magnitud. Era muy legible para la escritura monumental y administrativa, pero poco práctico para cálculos largos comparado con sistemas posicionales.</p>'
+      },
+      {
+        id: 'babylon', era: 'ancient', title: 'Sistema babilónico (sexagesimal)', date: 'c. 2000 a.C.',
+        summary: 'Sistema posicional en base 60 con importantes aplicaciones astronómicas y geométricas.',
+        details: '<p>Los babilonios desarrollaron una notación posicional basada en 60 que resultó extremadamente útil para astronomía y cálculos angulares. Muchos vestigios de la base 60 permanecen en la medida del tiempo y los ángulos.</p>'
+      },
+      {
+        id: 'china_iching', era: 'ancient', title: 'I Ching y combinaciones binarias', date: 'c. 1000–500 a.C. (textos más antiguos)',
+        summary: 'Representaciones de líneas partidas/enteras que prefiguran ideas binarias.',
+        details: '<p>Los trigramas y hexagramas del <i>I Ching</i> muestran combinaciones que pueden interpretarse como códigos binarios tempranos. Aunque no es un sistema posicional, revela el uso de estados duales en representaciones simbólicas.</p>'
+      },
+      {
+        id: 'maya', era: 'ancient', title: 'Sistema maya (vigesimal) y el cero', date: 'c. 300 a.C. – 900 d.C.; cero: c. siglo IV–V d.C.',
+        summary: 'Sistemas base 20 y una representación temprana del cero como marcador posicional.',
+        details: '<p>La civilización maya empleó un sistema vigesimal (base 20) y desarrolló el concepto del cero como marcador posicional —uno de los contextos más antiguos de uso del cero en el continente americano— permitiendo notaciones calendáricas y astronómicas precisas.</p>'
+      },
+      {
+        id: 'pingala', era: 'ancient', title: 'Pingala y la notación binaria temprana', date: 'posible: c. siglo III–I a.C. (autor tradicional)',
+        summary: 'Tratamientos combinatorios en obras sánscritas que ofrecen nociones similares al sistema binario.',
+        details: '<p>En textos védicos y gramaticales (atribuidos tradicionalmente a Pingala) aparecen estudios sobre métricas y combinaciones que pueden considerarse un antecedente conceptual del tratamiento binario de información y enumeración de combinaciones.</p>'
+      },
+      {
+        id: 'indian', era: 'medieval', title: 'Sistema indo-arábigo y formalización del cero', date: 'siglos V–VII d.C.; Brahmagupta: 628 d.C.',
+        summary: 'Surgimiento del sistema decimal posicional y reglas para operar con el cero.',
+        details: '<p>En la India se consolidó el sistema decimal posicional y se trataron formalmente las operaciones con cero. Brahmagupta (628 d.C.) fue clave al dar reglas explícitas para el uso del cero y las operaciones aritméticas, lo que permitió un salto en la capacidad de computación matemática.</p>'
+      },
+      {
+        id: 'algebraic', era: 'medieval', title: 'Álgebra y difusión árabe', date: 'siglos VIII–XII d.C.',
+        summary: 'Matemáticos árabes adoptan, difunden y desarrollan notación y algoritmos aritméticos.',
+        details: '<p>Eruditos en el mundo islámico (p. ej. Al-Khwarizmi) estudiaron y propagaron los métodos indo-arábigos. La traducción y transmisión de estos textos hacia Europa fueron críticas para la posterior adopción del sistema decimal en Occidente.</p>'
+      },
+      {
+        id: 'fibonacci', era: 'medieval', title: 'Diffusión en Europa: Fibonacci (Liber Abaci)', date: '1202 d.C.',
+        summary: 'Popularización de la aritmética indo-arábiga en el comercio europeo.',
+        details: '<p>Leonardo de Pisa, conocido como Fibonacci, mostró en su <i>Liber Abaci</i> cómo operar con el sistema decimal mediante ejemplos prácticos de comercio, interés y conversión de monedas, ayudando a su difusión en Europa.</p>'
+      },
+      {
+        id: 'leibniz', era: 'moderno', title: 'Leibniz y la aritmética binaria', date: '1703 d.C.',
+        summary: 'Formalización del sistema binario moderno y su conexión filosófica con lo simple y lo compuesto.',
+        details: '<p>Gottfried W. Leibniz publicó la aritmética binaria y argumentó su relevancia filosófica y práctica. Sus ideas permanecerían como fundamento teórico hasta la revolución de la lógica digital siglos después.</p>'
+      },
+      {
+        id: 'boole', era: 'moderno', title: 'George Boole y el álgebra lógica', date: '1847–1854',
+        summary: 'Fundamentos algebraicos para la lógica booleana, base de los circuitos digitales.',
+        details: '<p>Boole formuló la lógica algebraica que permitió tratar proposiciones mediante operaciones algebraicas. Sus obras (1847 y 1854) establecieron el marco teórico para la lógica digital y el diseño de circuitos.</p>'
+      },
+      {
+        id: 'shannon', era: 'moderno', title: 'Claude Shannon: relés, conmutación y bits', date: '1937 (tesis), 1948 (desarrollos)',
+        summary: 'Aplicación práctica de la lógica booleana a circuitos eléctricos y la formalización del bit como unidad de información.',
+        details: '<p>En su tesis de 1937 Shannon demostró cómo implementar operaciones booleanas con relés y switches, sentando las bases de la arquitectura de computadoras digitales. Introdujo además nociones clave sobre cuantificación de la información y tratamiento de señales digitales.</p>'
+      },
+      {
+        id: 'transistor', era: 'computo', title: 'Invención del transistor', date: '1947 d.C.',
+        summary: 'Dispositivo que permitió la miniaturización y la era electrónica moderna basada en 0/1.',
+        details: '<p>La invención del transistor en los laboratorios Bell en 1947 fue crucial para la sustitución de relés y tubos de vacío por componentes más fiables y pequeños, posibilitando la computación moderna y el almacenamiento binario a gran escala.</p>'
+      },
+      {
+        id: 'ascii', era: 'computo', title: 'ASCII y codificación de caracteres', date: '1963 d.C.',
+        summary: 'Estándar para mapear caracteres a secuencias binarias; base para interoperabilidad entre sistemas.',
+        details: '<p>El estándar ASCII (1963) permitió que textos y comandos se representaran consistentemente como secuencias binarias, facilitando la interoperabilidad entre computadores y el desarrollo del software moderno.</p>'
+      },
+      {
+        id: 'hex_css', era: 'computo', title: 'Hexadecimal en informática y web', date: '1970s–1990s',
+        summary: 'Uso del hexadecimal para representar direcciones, colores web y datos binarios de forma compacta.',
+        details: '<p>Desde los mainframes hasta la Web, el hexadecimal se convirtió en la forma práctica de mostrar y editar grandes bloques de datos binarios. En la Web (años 90) se popularizó su uso en códigos de color y en depuración de datos.</p>'
+      },
+      {
+        id: 'unicode', era: 'computo', title: 'Unicode y representación universal', date: '1991 d.C. (inicio)',
+        summary: 'Estándar moderno para codificar la mayoría de sistemas de escritura en secuencias de bits compatibles.',
+        details: '<p>Unicode (inicio en 1991) resolvió problemas de compatibilidad entre codificaciones de caracteres previas, permitiendo representar textos globales en sistemas digitales mediante esquemas de bits estandarizados (UTF-8, UTF-16).</p>'
+      },
+      {
+        id: 'modern', era: 'computo', title: 'Computación moderna y nuevos paradigmas (2020s)', date: '2020–2025',
+        summary: 'Convivencia de bases clásicas con nuevos desarrollos: computación cuántica, big data y criptografía.',
+        details: '<p>En la década de 2020 se observa la coexistencia de la aritmética clásica (decimal/binaria) con avances como la computación cuántica (qubits), representaciones especializadas para criptografía y algoritmos de procesamiento masivo de datos. Aunque el binario sigue dominando el hardware clásico, la investigación explora representaciones alternativas para problemas concretos.</p>'
+      }
+    ];
+
+    const timelineEl = document.getElementById('timeline');
+    const detailContent = document.getElementById('detailContent');
+
+    function renderEvents(list){
+      timelineEl.querySelectorAll('.event').forEach(n=>n.remove());
+      list.forEach((ev,i)=>{
+        const div = document.createElement('article');
+        div.className = 'event';
+        div.dataset.era = ev.era;
+        div.id = ev.id;
+        div.innerHTML = `
+          <div class="dot" aria-hidden><span></span></div>
+          <h3>${ev.title}</h3>
+          <div class="meta">${ev.date}</div>
+          <div class="desc">${ev.summary}</div>
+        `;
+        div.addEventListener('click',()=> showDetails(ev));
+        timelineEl.appendChild(div);
+      });
+    }
+
+    function showDetails(ev){
+      detailContent.innerHTML = `<h4 style="margin:0 0 8px">${ev.title} <small style='color:var(--muted)'> — ${ev.date}</small></h4>` + ev.details + '<hr style="border-color:rgba(255,255,255,0.03)"><p class="meta">Etiquetas: '+ev.era+'</p>';
+      // scroll into view in small screens
+      detailContent.scrollIntoView({behavior:'smooth',block:'center'});
+    }
+
+    // initial render
+    renderEvents(events);
+
+    // filters
+    document.querySelectorAll('[data-filter]').forEach(btn=>{
+      btn.addEventListener('click',()=>{
+        const f = btn.dataset.filter;
+        if(f==='all') renderEvents(events);
+        else renderEvents(events.filter(e=>{
+          if(f==='ancient') return ['ancient'].includes(e.era);
+          if(f==='medieval') return ['medieval'].includes(e.era);
+          if(f==='moderno') return ['moderno'].includes(e.era);
+          if(f==='computo') return ['computo','modern','moderno'].includes(e.era);
+          return true;
+        }));
+      });
+    });
+
+    // keyboard navigation: arrows move through events
+    let currentIndex = -1;
+    window.addEventListener('keydown', e=>{
+      const visible = Array.from(document.querySelectorAll('.event'));
+      if(!visible.length) return;
+      if(e.key === 'ArrowDown' || e.key === 'ArrowRight'){
+        currentIndex = Math.min(visible.length-1, currentIndex+1);
+        visible[currentIndex].click();
+        visible[currentIndex].scrollIntoView({behavior:'smooth',block:'center'});
+      } else if (e.key === 'ArrowUp' || e.key === 'ArrowLeft'){
+        currentIndex = Math.max(0, currentIndex-1);
+        visible[currentIndex].click();
+        visible[currentIndex].scrollIntoView({behavior:'smooth',block:'center'});
+      }
+    });
+
+    // Accessibility: focus first on load
+    setTimeout(()=>{
+      const first = document.querySelector('.event');
+      if(first) first.setAttribute('tabindex','0');
+    },300);
+  </script>
+</body>
+</html>

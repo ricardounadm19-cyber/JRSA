@@ -1,0 +1,816 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Aplicaciones de Sistemas Numéricos</title>
+    <style>
+        :root {
+            --decimal: #4c7faf;
+            --binary: #af4c4c;
+            --octal: #4caf50;
+            --hex: #af4ca0;
+            --light: #f5f5f5;
+            --dark: #333;
+            --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background-color: #f0f2f5;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+        
+        header {
+            background: linear-gradient(135deg, var(--decimal), var(--hex));
+            color: white;
+            text-align: center;
+            padding: 2rem 1rem;
+            box-shadow: var(--shadow);
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+        
+        .intro {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+        }
+        
+        .systems-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .system-card {
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            transition: transform 0.3s ease;
+        }
+        
+        .system-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+        }
+        
+        .decimal .card-header { background-color: var(--decimal); }
+        .binary .card-header { background-color: var(--binary); }
+        .octal .card-header { background-color: var(--octal); }
+        .hex .card-header { background-color: var(--hex); }
+        
+        .card-body {
+            padding: 1.5rem;
+        }
+        
+        .card-body ul {
+            list-style-type: none;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-body li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .card-body li:last-child {
+            border-bottom: none;
+        }
+        
+        .demo-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .demo-container {
+            margin-top: 1.5rem;
+            padding: 1.5rem;
+            border: 1px solid #eee;
+            border-radius: 8px;
+        }
+        
+        .demo-binary {
+            border-top: 4px solid var(--binary);
+        }
+        
+        .demo-octal {
+            border-top: 4px solid var(--octal);
+        }
+        
+        .demo-decimal {
+            border-top: 4px solid var(--decimal);
+        }
+        
+        .demo-hex {
+            border-top: 4px solid var(--hex);
+        }
+        
+        .converter {
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+            box-shadow: var(--shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .converter h2 {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            color: var(--decimal);
+        }
+        
+        .converter-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .converter-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        .input-group, .output-group {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-bottom: 0.5rem;
+            font-weight: bold;
+        }
+        
+        select, input, button {
+            padding: 0.8rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 1rem;
+        }
+        
+        button {
+            background-color: var(--decimal);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background-color 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: #3a6a99;
+        }
+        
+        .output {
+            background-color: #f9f9f9;
+            padding: 1rem;
+            border-radius: 4px;
+            min-height: 42px;
+            margin-top: 0.5rem;
+            border: 1px dashed #ccc;
+        }
+        
+        .bit-container {
+            display: flex;
+            gap: 10px;
+            margin: 15px 0;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+        
+        .bit {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .bit.off {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        
+        .bit.on {
+            background-color: var(--binary);
+            color: white;
+        }
+        
+        .color-display {
+            width: 150px;
+            height: 150px;
+            border-radius: 8px;
+            border: 2px solid #ddd;
+            margin: 0 auto;
+        }
+        
+        .color-value {
+            font-family: monospace;
+            font-size: 1.2rem;
+            padding: 0.5rem 1rem;
+            background: #f0f0f0;
+            border-radius: 4px;
+            text-align: center;
+            margin: 15px 0;
+        }
+        
+        .color-controls {
+            display: grid;
+            grid-template-columns: auto 1fr auto;
+            gap: 10px;
+            align-items: center;
+            margin: 10px 0;
+        }
+        
+        .permisos-container {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .permiso-grupo {
+            border: 1px solid #ddd;
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .permiso-opciones {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+        
+        .permiso-checkbox {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 2rem;
+            background: var(--dark);
+            color: white;
+            margin-top: 2rem;
+        }
+        
+        .demo-controls {
+            margin: 15px 0;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .demo-result {
+            margin-top: 15px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>Aplicaciones de los Sistemas Numéricos</h1>
+        <p>Explora cómo diferentes sistemas numéricos se utilizan en la vida cotidiana y la tecnología</p>
+    </header>
+    
+    <div class="container">
+        <section class="intro">
+            <h2>Los sistemas numéricos en el mundo moderno</h2>
+            <p>Aunque utilizamos el sistema decimal en nuestra vida diaria, otros sistemas numéricos como el binario, octal y hexadecimal son fundamentales en el mundo de la computación y la tecnología digital.</p>
+        </section>
+        
+        <div class="systems-grid">
+            <div class="system-card decimal">
+                <div class="card-header">
+                    <h2>Sistema Decimal</h2>
+                    <p>Base 10</p>
+                </div>
+                <div class="card-body">
+                    <h3>Aplicaciones actuales:</h3>
+                    <ul>
+                        <li>Contabilidad y finanzas</li>
+                        <li>Mediciones científicas</li>
+                        <li>Educación matemática</li>
+                        <li>Comercio y transacciones diarias</li>
+                        <li>Sistema métrico internacional</li>
+                    </ul>
+                    <p>El sistema decimal es el más utilizado en la vida cotidiana debido a nuestra anatomía (10 dedos) y su facilidad de comprensión.</p>
+                </div>
+            </div>
+            
+            <div class="system-card binary">
+                <div class="card-header">
+                    <h2>Sistema Binario</h2>
+                    <p>Base 2</p>
+                </div>
+                <div class="card-body">
+                    <h3>Aplicaciones actuales:</h3>
+                    <ul>
+                        <li>Circuitos digitales y computadoras</li>
+                        <li>Almacenamiento de datos</li>
+                        <li>Comunicaciones digitales</li>
+                        <li>Procesamiento de información</li>
+                        <li>Lógica booleana</li>
+                    </ul>
+                    <p>Las computadoras usan el sistema binario porque los circuitos electrónicos pueden representar fácilmente dos estados: encendido (1) y apagado (0).</p>
+                </div>
+            </div>
+            
+            <div class="system-card octal">
+                <div class="card-header">
+                    <h2>Sistema Octal</h2>
+                    <p>Base 8</p>
+                </div>
+                <div class="card-body">
+                    <h3>Aplicaciones actuales:</h3>
+                    <ul>
+                        <li>Permisos de archivos en Unix/Linux</li>
+                        <li>Representación compacta de números binarios</li>
+                        <li>Sistemas embebidos y legacy</li>
+                        <li>Algunos lenguajes de programación</li>
+                        <li>Depuración de sistemas</li>
+                    </ul>
+                    <p>Aunque menos común, el sistema octal sigue siendo útil para representar grupos de 3 bits de manera compacta.</p>
+                </div>
+            </div>
+            
+            <div class="system-card hex">
+                <div class="card-header">
+                    <h2>Sistema Hexadecimal</h2>
+                    <p>Base 16</p>
+                </div>
+                <div class="card-body">
+                    <h3>Aplicaciones actuales:</h3>
+                    <ul>
+                        <li>Direcciones de memoria</li>
+                        <li>Códigos de color en diseño web</li>
+                        <li>Direcciones MAC y protocolos de red</li>
+                        <li>Depuración de programas</li>
+                        <li>Representación de datos binarios</li>
+                    </ul>
+                    <p>El sistema hexadecimal es ideal para representar bytes (8 bits) con solo dos dígitos, facilitando el trabajo con datos binarios.</p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- DEMOSTRACIÓN BINARIA -->
+        <section class="demo-section">
+            <h2>Demostración: Sistema Binario</h2>
+            <p>El sistema binario utiliza solo dos dígitos: 0 y 1. Cada dígito se llama "bit". Los computadores usan bits para representar toda la información.</p>
+            
+            <div class="demo-container demo-binary">
+                <h3>Simulador de Bits</h3>
+                <p>Haz clic en los bits para encenderlos (1) o apagarlos (0) y observa el valor decimal resultante:</p>
+                
+                <div class="bit-container" id="bitContainer">
+                    <!-- Los bits se generarán con JavaScript -->
+                </div>
+                
+                <div class="demo-result">
+                    <p>Valor binario: <span id="binaryValue">00000000</span></p>
+                    <p>Valor decimal: <span id="decimalValue">0</span></p>
+                </div>
+                
+                <div class="demo-controls">
+                    <button id="resetBits">Reiniciar bits</button>
+                    <button id="randomBits">Bits aleatorios</button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- DEMOSTRACIÓN OCTAL -->
+        <section class="demo-section">
+            <h2>Demostración: Sistema Octal</h2>
+            <p>El sistema octal utiliza 8 dígitos (0-7). Se usa comúnmente para representar permisos de archivos en sistemas Unix/Linux.</p>
+            
+            <div class="demo-container demo-octal">
+                <h3>Simulador de Permisos de Archivo</h3>
+                <p>Establece los permisos para usuario, grupo y otros. Observa cómo se representa en octal:</p>
+                
+                <div class="permisos-container">
+                    <div class="permiso-grupo">
+                        <h4>Usuario</h4>
+                        <div class="permiso-opciones">
+                            <div class="permiso-checkbox">
+                                <label>Lectura</label>
+                                <input type="checkbox" class="permiso" data-grupo="usuario" data-permiso="4">
+                            </div>
+                            <div class="permiso-checkbox">
+                                <label>Escritura</label>
+                                <input type="checkbox" class="permiso" data-grupo="usuario" data-permiso="2">
+                            </div>
+                            <div class="permiso-checkbox">
+                                <label>Ejecución</label>
+                                <input type="checkbox" class="permiso" data-grupo="usuario" data-permiso="1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="permiso-grupo">
+                        <h4>Grupo</h4>
+                        <div class="permiso-opciones">
+                            <div class="permiso-checkbox">
+                                <label>Lectura</label>
+                                <input type="checkbox" class="permiso" data-grupo="grupo" data-permiso="4">
+                            </div>
+                            <div class="permiso-checkbox">
+                                <label>Escritura</label>
+                                <input type="checkbox" class="permiso" data-grupo="grupo" data-permiso="2">
+                            </div>
+                            <div class="permiso-checkbox">
+                                <label>Ejecución</label>
+                                <input type="checkbox" class="permiso" data-grupo="grupo" data-permiso="1">
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="permiso-grupo">
+                        <h4>Otros</h4>
+                        <div class="permiso-opciones">
+                            <div class="permiso-checkbox">
+                                <label>Lectura</label>
+                                <input type="checkbox" class="permiso" data-grupo="otros" data-permiso="4">
+                            </div>
+                            <div class="permiso-checkbox">
+                                <label>Escritura</label>
+                                <input type="checkbox" class="permiso" data-grupo="otros" data-permiso="2">
+                            </div>
+                            <div class="permiso-checkbox">
+                                <label>Ejecución</label>
+                                <input type="checkbox" class="permiso" data-grupo="otros" data-permiso="1">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="demo-result">
+                    <p>Permisos en octal: <span id="octalPermissions">000</span></p>
+                    <p>Notación simbólica: <span id="symbolicPermissions">---------</span></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- DEMOSTRACIÓN DECIMAL -->
+        <section class="demo-section">
+            <h2>Demostración: Sistema Decimal</h2>
+            <p>El sistema decimal es el que usamos en nuestra vida diaria. Utiliza 10 dígitos (0-9) y es un sistema posicional donde cada posición representa una potencia de 10.</p>
+            
+            <div class="demo-container demo-decimal">
+                <h3>Descomposición de Números Decimales</h3>
+                <p>Ingresa un número decimal y observa su descomposición en unidades, decenas, centenas, etc.</p>
+                
+                <div class="demo-controls">
+                    <input type="number" id="decimalInput" min="0" placeholder="Ingresa un número decimal">
+                    <button id="decomposeButton">Descomponer</button>
+                </div>
+                
+                <div class="demo-result" id="decimalDecomposition">
+                    <!-- La descomposición se mostrará aquí -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- DEMOSTRACIÓN HEXADECIMAL -->
+        <section class="demo-section">
+            <h2>Demostración: Sistema Hexadecimal</h2>
+            <p>El sistema hexadecimal utiliza 16 dígitos (0-9, A-F). Es ampliamente usado en informática para representar direcciones de memoria y colores.</p>
+            
+            <div class="demo-container demo-hex">
+                <h3>Selector de Color Hexadecimal</h3>
+                <p>En diseño web, los colores se representan con valores hexadecimales. Cada color se define con 6 dígitos hexadecimales (RRGGBB).</p>
+                
+                <div class="color-display" id="colorDisplay"></div>
+                <div class="color-value" id="colorValue">#RRGGBB</div>
+                
+                <div class="color-controls">
+                    <label for="red">Rojo:</label>
+                    <input type="range" id="red" min="0" max="255" value="128">
+                    <span id="redValue">128</span>
+                </div>
+                
+                <div class="color-controls">
+                    <label for="green">Verde:</label>
+                    <input type="range" id="green" min="0" max="255" value="128">
+                    <span id="greenValue">128</span>
+                </div>
+                
+                <div class="color-controls">
+                    <label for="blue">Azul:</label>
+                    <input type="range" id="blue" min="0" max="255" value="128">
+                    <span id="blueValue">128</span>
+                </div>
+                
+                <div class="demo-result">
+                    <p>Valor RGB: <span id="rgbValue">rgb(128, 128, 128)</span></p>
+                </div>
+            </div>
+        </section>
+        
+        <!-- CONVERSOR -->
+        <section class="converter">
+            <h2>Conversor entre Sistemas Numéricos</h2>
+            <div class="converter-grid">
+                <div class="input-group">
+                    <label for="inputValue">Valor de entrada:</label>
+                    <input type="text" id="inputValue" placeholder="Ingresa un valor">
+                </div>
+                
+                <div class="input-group">
+                    <label for="inputBase">Sistema de entrada:</label>
+                    <select id="inputBase">
+                        <option value="2">Binario (Base 2)</option>
+                        <option value="8">Octal (Base 8)</option>
+                        <option value="10" selected>Decimal (Base 10)</option>
+                        <option value="16">Hexadecimal (Base 16)</option>
+                    </select>
+                </div>
+                
+                <div class="output-group">
+                    <label for="outputBase">Convertir a:</label>
+                    <select id="outputBase">
+                        <option value="2">Binario (Base 2)</option>
+                        <option value="8">Octal (Base 8)</option>
+                        <option value="10">Decimal (Base 10)</option>
+                        <option value="16" selected>Hexadecimal (Base 16)</option>
+                    </select>
+                </div>
+                
+                <div class="output-group">
+                    <label>Resultado:</label>
+                    <div class="output" id="conversionResult">Esperando entrada...</div>
+                </div>
+                
+                <button id="convertButton">Convertir</button>
+            </div>
+        </section>
+    </div>
+    
+    <footer>
+        <p>Página creada para demostrar las aplicaciones actuales de los sistemas numéricos</p>
+        <p>© 2023 - José Ricardo Sánchez Aguas (UNADM)</p>
+    </footer>
+
+    <script>
+        // ===== DEMOSTRACIÓN BINARIA =====
+        const bitContainer = document.getElementById('bitContainer');
+        const binaryValue = document.getElementById('binaryValue');
+        const decimalValue = document.getElementById('decimalValue');
+        const resetBitsBtn = document.getElementById('resetBits');
+        const randomBitsBtn = document.getElementById('randomBits');
+        
+        // Crear 8 bits
+        for (let i = 0; i < 8; i++) {
+            const bit = document.createElement('div');
+            bit.className = 'bit off';
+            bit.textContent = '0';
+            bit.dataset.position = 7 - i; // Bit más significativo primero
+            
+            bit.addEventListener('click', () => {
+                if (bit.classList.contains('off')) {
+                    bit.classList.remove('off');
+                    bit.classList.add('on');
+                    bit.textContent = '1';
+                } else {
+                    bit.classList.remove('on');
+                    bit.classList.add('off');
+                    bit.textContent = '0';
+                }
+                updateBinaryValue();
+            });
+            
+            bitContainer.appendChild(bit);
+        }
+        
+        function updateBinaryValue() {
+            const bits = Array.from(bitContainer.querySelectorAll('.bit'))
+                .map(bit => bit.textContent)
+                .join('');
+            
+            binaryValue.textContent = bits;
+            
+            // Convertir a decimal
+            const decimal = parseInt(bits, 2);
+            decimalValue.textContent = isNaN(decimal) ? 0 : decimal;
+        }
+        
+        resetBitsBtn.addEventListener('click', () => {
+            bitContainer.querySelectorAll('.bit').forEach(bit => {
+                bit.classList.remove('on');
+                bit.classList.add('off');
+                bit.textContent = '0';
+            });
+            updateBinaryValue();
+        });
+        
+        randomBitsBtn.addEventListener('click', () => {
+            bitContainer.querySelectorAll('.bit').forEach(bit => {
+                const randomBit = Math.random() > 0.5 ? '1' : '0';
+                bit.textContent = randomBit;
+                if (randomBit === '1') {
+                    bit.classList.remove('off');
+                    bit.classList.add('on');
+                } else {
+                    bit.classList.remove('on');
+                    bit.classList.add('off');
+                }
+            });
+            updateBinaryValue();
+        });
+        
+        // ===== DEMOSTRACIÓN OCTAL =====
+        const permissionCheckboxes = document.querySelectorAll('.permiso');
+        const octalPermissions = document.getElementById('octalPermissions');
+        const symbolicPermissions = document.getElementById('symbolicPermissions');
+        
+        function updatePermissions() {
+            let userValue = 0;
+            let groupValue = 0;
+            let othersValue = 0;
+            let symbolic = '';
+            
+            // Calcular valores para cada grupo
+            document.querySelectorAll('.permiso[data-grupo="usuario"]:checked').forEach(cb => {
+                userValue += parseInt(cb.dataset.permiso);
+            });
+            
+            document.querySelectorAll('.permiso[data-grupo="grupo"]:checked').forEach(cb => {
+                groupValue += parseInt(cb.dataset.permiso);
+            });
+            
+            document.querySelectorAll('.permiso[data-grupo="otros"]:checked').forEach(cb => {
+                othersValue += parseInt(cb.dataset.permiso);
+            });
+            
+            // Actualizar representación octal
+            octalPermissions.textContent = `${userValue}${groupValue}${othersValue}`;
+            
+            // Actualizar representación simbólica
+            symbolic = getSymbolicPermission(userValue, 'usuario') +
+                      getSymbolicPermission(groupValue, 'grupo') +
+                      getSymbolicPermission(othersValue, 'otros');
+            
+            symbolicPermissions.textContent = symbolic;
+        }
+        
+        function getSymbolicPermission(value, grupo) {
+            let perm = '';
+            perm += (value & 4) ? 'r' : '-';
+            perm += (value & 2) ? 'w' : '-';
+            perm += (value & 1) ? 'x' : '-';
+            return perm;
+        }
+        
+        permissionCheckboxes.forEach(cb => {
+            cb.addEventListener('change', updatePermissions);
+        });
+        
+        // Inicializar permisos
+        updatePermissions();
+        
+        // ===== DEMOSTRACIÓN DECIMAL =====
+        const decimalInput = document.getElementById('decimalInput');
+        const decomposeButton = document.getElementById('decomposeButton');
+        const decimalDecomposition = document.getElementById('decimalDecomposition');
+        
+        decomposeButton.addEventListener('click', () => {
+            const number = parseInt(decimalInput.value);
+            
+            if (isNaN(number) || number < 0) {
+                decimalDecomposition.innerHTML = '<p>Por favor, ingresa un número válido.</p>';
+                return;
+            }
+            
+            const digits = number.toString().split('').reverse();
+            let decompositionHTML = `<p>Descomposición del número ${number}:</p><ul>`;
+            
+            digits.forEach((digit, index) => {
+                const place = Math.pow(10, index);
+                const value = parseInt(digit) * place;
+                decompositionHTML += `<li>${digit} × ${place} = ${value}</li>`;
+            });
+            
+            decompositionHTML += '</ul>';
+            decimalDecomposition.innerHTML = decompositionHTML;
+        });
+        
+        // ===== DEMOSTRACIÓN HEXADECIMAL =====
+        const redSlider = document.getElementById('red');
+        const greenSlider = document.getElementById('green');
+        const blueSlider = document.getElementById('blue');
+        const redValue = document.getElementById('redValue');
+        const greenValue = document.getElementById('greenValue');
+        const blueValue = document.getElementById('blueValue');
+        const colorDisplay = document.getElementById('colorDisplay');
+        const colorValue = document.getElementById('colorValue');
+        const rgbValue = document.getElementById('rgbValue');
+        
+        function updateColor() {
+            const r = parseInt(redSlider.value);
+            const g = parseInt(greenSlider.value);
+            const b = parseInt(blueSlider.value);
+            
+            // Actualizar los valores mostrados
+            redValue.textContent = r;
+            greenValue.textContent = g;
+            blueValue.textContent = b;
+            
+            // Convertir a hexadecimal
+            const rHex = r.toString(16).padStart(2, '0');
+            const gHex = g.toString(16).padStart(2, '0');
+            const bHex = b.toString(16).padStart(2, '0');
+            const hexColor = `#${rHex}${gHex}${bHex}`.toUpperCase();
+            
+            // Actualizar la visualización
+            colorDisplay.style.backgroundColor = hexColor;
+            colorValue.textContent = hexColor;
+            rgbValue.textContent = `rgb(${r}, ${g}, ${b})`;
+        }
+        
+        redSlider.addEventListener('input', updateColor);
+        greenSlider.addEventListener('input', updateColor);
+        blueSlider.addEventListener('input', updateColor);
+        
+        // Inicializar
+        updateColor();
+        
+        // ===== CONVERSOR DE SISTEMAS =====
+        document.getElementById('convertButton').addEventListener('click', function() {
+            const inputValue = document.getElementById('inputValue').value;
+            const inputBase = parseInt(document.getElementById('inputBase').value);
+            const outputBase = parseInt(document.getElementById('outputBase').value);
+            
+            if (!inputValue) {
+                document.getElementById('conversionResult').textContent = 'Por favor ingresa un valor';
+                return;
+            }
+            
+            try {
+                // Convertir a decimal primero
+                const decimalValue = parseInt(inputValue, inputBase);
+                
+                if (isNaN(decimalValue)) {
+                    document.getElementById('conversionResult').textContent = 'Valor inválido para el sistema seleccionado';
+                    return;
+                }
+                
+                // Convertir desde decimal al sistema objetivo
+                let result;
+                if (outputBase === 2) {
+                    result = decimalValue.toString(2);
+                } else if (outputBase === 8) {
+                    result = decimalValue.toString(8);
+                } else if (outputBase === 10) {
+                    result = decimalValue.toString(10);
+                } else if (outputBase === 16) {
+                    result = decimalValue.toString(16).toUpperCase();
+                }
+                
+                document.getElementById('conversionResult').textContent = result;
+            } catch (error) {
+                document.getElementById('conversionResult').textContent = 'Error en la conversión';
+            }
+        });
+    </script>
+</body>
+</html>
